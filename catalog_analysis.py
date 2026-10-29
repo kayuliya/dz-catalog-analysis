@@ -237,6 +237,40 @@ def total_duration_above(movies, min_rating=7):
     return sum(m["duration_min"] for m in movies if m["rating"] > min_rating)
 
 
+def find_movie_by_title(movies, title):
+    for movie in movies:
+        if movie["title"] == title:
+            return movie
+    return None
+
+
+def build_report(movies):
+    print("ОТЧЕТ ПО КАТАЛОГУ")
+    print()
+
+    average = average_rating(movies)
+    _, _, mean_age = catalog_age_stats(movies)
+
+    print(f"Средний рейтинг: {average}")
+    print(f"Средний возраст фильмов: {mean_age} лет")
+
+    print()
+    print("Топ-3 фильма:")
+    for title, _ in top_n_by_rating(movies, 3):
+        movie = find_movie_by_title(movies, title)
+        print(f"  {format_report_line(movie)}")
+
+    print()
+    print("Фильмов по жанрам:")
+    counts = count_by_genre(movies)
+    ordered = sorted(counts.items(), key=lambda item: (-item[1], item[0]))
+    for genre, count in ordered:
+        print(f"  {genre} — {count}")
+
+    print()
+    genres = ", ".join(sorted(all_genres(movies)))
+    print(f"Все жанры каталога: {genres}")
+
+
 if __name__ == "__main__":
-    print_high_rated(movies)
-    print(total_duration_above(movies))
+    build_report(movies)
