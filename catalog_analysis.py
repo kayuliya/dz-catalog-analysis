@@ -169,8 +169,18 @@ def format_report_line(movie):
     genres = ", ".join(sorted(movie["genres"]))
     return f'"{title}" ({year}) — {rating}/10, {duration}, жанры: {genres}'
 
+def titles_sorted_by_rating(movies):
+    ordered = sorted(movies, key=lambda movie: movie["rating"], reverse=True)
+    return [movie["title"] for movie in ordered]
+
+
+def top_n_by_rating(movies, n=3):
+    ordered = sorted(movies, key=lambda movie: movie["rating"], reverse=True)
+    top = []
+    for movie in ordered[:n]:
+        top.append((movie["title"], movie["rating"]))
+    return top
 
 if __name__ == "__main__":
-    print(normalize_title("silent hours"))
-    print(make_slug("Silent Hours"))
-    print(format_report_line(movies[7]))
+    print(titles_sorted_by_rating(movies))
+    print(top_n_by_rating(movies, 3))
